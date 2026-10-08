@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 36" fill="none">
+  <!-- NCBA Wordmark Symbol -->
+  <rect x="0" y="4" width="28" height="28" rx="4" fill="#39302D"/>
+  <path d="M7 25V11L14 25V11M16 11V25H21M7 11H21" stroke="#3AB3E5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Text Brand -->
+  <text x="36" y="20" font-family="'Century Gothic', Questrial, sans-serif" font-weight="700" font-size="14" fill="#39302D" letter-spacing="-0.02em" class="dark:fill-[#F0F6FC]">NCBA</text>
+  <text x="76" y="20" font-family="'Century Gothic', Questrial, sans-serif" font-weight="700" font-size="14" fill="#3AB3E5" letter-spacing="-0.02em">BOOSTA</text>
+  <text x="36" y="29" font-family="'Century Gothic', Questrial, sans-serif" font-weight="500" font-size="7" fill="#525252" letter-spacing="0.5px" class="dark:fill-[#8B949E]">WORKING CAPITAL</text>
+</svg>

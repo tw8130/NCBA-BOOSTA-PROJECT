@@ -1,0 +1,154 @@
+4. DETAILED SPECIFICATIONS OF SCREENS TO IMPLEMENT
+Screen 1: Splash, Whitelist Verification & Entry
+Route: / and /onboarding/entry
+
+Simulates receipt of SMS invite containing shortlink.
+
+Input: Mobile Number and National ID.
+
+Hits mock T24 Verification API:
+
+If existing customer: Pre-populates CIF and linked NCBA accounts. Proceed to verification OTP.
+
+If New-to-Bank (NTB): Present banner: "You do not have an active NCBA Account. To activate your KES 5M facility, open an account via NCBA NOW in 3 minutes." Action button directs to simulated NCBA NOW workflow and redirects back on completion.
+
+Screen 2: OTP Verification & PIN Creation
+Route: /onboarding/verify and /onboarding/create-pin
+
+6-digit numeric split input box with 45-second resend countdown.
+
+PIN Creation: 4-digit PIN setup with confirmation field and numeric keypad mask.
+
+Screen 3: Unified 65/35 Profile, KYB & Geotagging Wizard
+Route: /onboarding/kyb-wizard
+
+Implement 65/35 layout split.
+
+Left Column Steps:
+
+Personal Details: Pre-filled inputs with "From T24" badge. User fills missing education level and emergency contact.
+
+Business Profile: Legal name, employee count, sector dropdown, date business began, county and sub-county.
+
+Entity Selection & Mandate:
+
+Radio selection: Sole Proprietorship | Partnership | Limited Company (CR12).
+
+Mandate: Single vs Multi-party.
+
+If Partnership or Ltd Company: Dynamic list builder to "Add Partners / Directors" (Full Name, National ID, Phone, Email).
+
+Document & Identity Upload:
+
+ID Front & Back uploader.
+
+Live Facial Capture component (HTML5 camera canvas with oval face guide).
+
+Business Premise Geolocation Capture: Live GPS lookup fetching coordinates (lat, lng, accuracy), displaying interactive coordinate tag and camera snapshot of business shopfront.
+
+HTML5 E-Signature Pad component allowing touch/mouse signature drawing.
+
+Right Column (35%): Dynamic Onboarding Summary Card, Geotag preview pin, entity document checklist, and step-by-step progress indicator.
+
+Screen 4: Main Customer Dashboard ("My Boosta")
+Route: /customer/dashboard
+
+Header: Greeting ("Welcome back, Boniface"), Account Switcher, Notification Bell.
+
+Top Row - Credit & Facility Overview:
+
+Credit Score Card: Circular progress ring showing 751 / 900 ("Excellent"). Prominent action button: [Improve My Score] triggering M-PESA statement upload modal.
+
+Boosta Facility Limit Card: Aggregate metrics (Total Available Limit, Total Approved Limit, Utilized Limit). Locked indicator banner if any anchor is restricted.
+
+Middle Row - Active Loans & Anchor Breakdown:
+
+My Active Loans: Horizontal cards displaying Anchor Name, Loan Ref, Outstanding Balance, Days Remaining, and direct [Repay] shortcut.
+
+My Anchors: Cards for EABL, Coca-Cola, etc., displaying specific approved/available limits and clear status badges (Drawdown Available vs Drawdown on Hold - CRB Check).
+
+Sidebar: Clean 195px fixed sidebar adhering to the blueprint (My Boosta, My Anchors, My Loans, Transactions, Help & Support, Settings).
+
+Screen 5: Anchor Multi-Tenure Drawdown Stepper
+Route: /customer/drawdown
+
+65/35 Split Implementation:
+
+Left Form:
+
+Step 1: Select Anchor from eligible list.
+
+Step 2: Amount input with percentage quick-chips (25%, 50%, Full Amount). Live validation against specific Anchor available limit.
+
+Step 3: Tenor selection pill buttons (7 days, 14 days, 30 days, 60 days, 90 days) and Purpose radio cards (Stock purchase, seasonal restocking, large order bridging).
+
+Step 4: Submission & Mandate Handler:
+
+If Sole Proprietor: Direct submission -> Instant simulation -> Disbursement confirmation to Anchor account.
+
+If Partnership / Ltd Company: Displays modal: "Application Submitted for Multi-Party Approval. SMS notifications sent to 2 Directors."
+
+Right Panel (Summary): Live fee computation table updating synchronously:
+
+Principal: KES [X]
+
+Processing Fee: 3.5%
+
+Interest (Base + Margin pro-rated by tenor): KES [Y]
+
+Credit Life Insurance (0.011%): KES [Z]
+
+Excise Duty (20% on fees): KES [W]
+
+Disbursed to Anchor: Principal - Charges
+
+Total Repayable: KES [Total]
+
+Maturity Date.
+
+Screen 6: Multi-Signatory Web Review Portal (Director SMS Journey)
+Route: /signatory/review/:token
+
+Standalone view designed for directors opening an approval SMS link on mobile/desktop without logging into the main borrower portal.
+
+Displays full breakdown of requested drawdown (Initiated by, Supplier, Amount, Tenor, Total Repayable).
+
+Three Distinct Action Paths:
+
+Approve & Sign: Opens full-width canvas signature pad -> Confirms transaction -> Moves drawdown to APPROVED / DISBURSED.
+
+Request Rework: Opens comment drawer -> Director inputs correction notes (e.g., "Reduce amount by 200k") -> Moves drawdown to REWORK state and alerts initiator.
+
+Decline: Rejects application with audit reason.
+
+Screen 7: "My Loans" Portfolio & Dual-Method Repayment
+Route: /customer/loans and /customer/repay
+
+Filterable tab navigation: [All], [Active], [Overdue], [Paid Off].
+
+Click loan -> Repay Drawer / Screen:
+
+Select mode: Full Payment vs Partial Payment (with live balance recalculation).
+
+Select Source:
+
+NCBA Account: Fetches customer's T24 accounts, user selects account, enters PIN -> Real-time debit simulation.
+
+M-PESA: Input phone number -> Trigger STK push simulation with countdown loader, handling WRONG_PIN, CANCELLED, TIMEOUT, and SUCCESS with automated retries.
+
+Screen 8: Internal Bank LMS Portal (Maker-Checker Operations)
+Route: /admin/lms/*
+
+Dedicated back-office dashboard for bank operations staff.
+
+Features:
+
+Credit Limit Management (Maker-Checker):
+
+Maker View: Search customer, request limit amendment with justificatory memo upload.
+
+Checker View: Approval queue displaying pending amendments with audit trails and Approve/Reject controls.
+
+Portfolio Monitoring: Live table of all facilities across anchors, classification grades (Normal 1-30 DPD, Watch 30-90 DPD, Substandard 90-180 DPD, Loss 360+ DPD), 30% p.a. default penalty calculation.
+
+Core Reconciliations: View T24 FT references matched against mobile repayment transaction hashes.

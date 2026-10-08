@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Questrial&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-cocoa: #39302D;
+    --color-sky: #3AB3E5;
+    --color-sky-hover: #2A9ED0;
+    --color-sky-dark: #2188B5;
+    --color-sun: #F8E200;
+    --color-mediterranean: #00A8A9;
+    --color-coral: #E4032C;
+    --color-passion: #9F197E;
+
+    --bg-surface: #F7F8FA;
+    --paper-surface: #FFFFFF;
+    --border-surface: #EDF2F7;
+    --text-primary: #39302D;
+    --text-secondary: #525252;
+    --text-muted: #9AA0A6;
+  }
+
+  .dark {
+    --bg-surface: #0D1117;
+    --paper-surface: #161B22;
+    --border-surface: #30363D;
+    --text-primary: #F0F6FC;
+    --text-secondary: #C9D1D9;
+    --text-muted: #8B949E;
+  }
+
+  /* Authoritative A5 rule: No box-shadows, 1px borders only */
+  *, ::before, ::after {
+    box-shadow: none !important;
+  }
+
+  html, body, #root {
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Century Gothic', CenturyGothic, AppleGothic, Questrial, sans-serif;
+    color: var(--text-primary);
+    background-color: var(--bg-surface);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Keyboard focus states adhering to WCAG */
+  *:focus-visible {
+    outline: 2px solid var(--color-sky);
+    outline-offset: 1px;
+  }
+}
+
+@layer utilities {
+  .badge-glass {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+}
