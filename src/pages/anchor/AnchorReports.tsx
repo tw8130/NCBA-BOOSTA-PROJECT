@@ -22,15 +22,15 @@ export default function AnchorReports() {
   const avgFinancing = financedCount ? Math.round(totalFinancing / financedCount) : 0
 
   const financingStatusPie = [
-    { name: 'Active facility', value: customers.filter((c) => c.status === 'ACTIVE').length, color: '#00A8A9' },
-    { name: 'Dormant', value: customers.filter((c) => c.status === 'DORMANT').length, color: '#94a3b8' },
-    { name: 'Restricted', value: customers.filter((c) => c.status === 'RESTRICTED').length, color: '#E4032C' },
+    { name: 'Active facility', value: customers.filter((c) => c.status === 'ACTIVE').length, color: '#00A3E0' },
+    { name: 'Dormant', value: customers.filter((c) => c.status === 'DORMANT').length, color: '#003865' },
+    { name: 'Restricted', value: customers.filter((c) => c.status === 'RESTRICTED').length, color: '#E05A47' },
   ]
 
   const contributionPie = [...customers]
     .sort((a, b) => b.annualSales - a.annualSales)
     .slice(0, 5)
-    .map((c, i) => ({ name: c.name, value: c.annualSales, color: ['#3AB3E5', '#00A8A9', '#F8E200', '#9F197E', '#E4032C'][i] }))
+    .map((c, i) => ({ name: c.name, value: c.annualSales, color: ['#00A3E0', '#003865', '#3D2619', '#F5A623', '#E05A47'][i] }))
 
   const currentYear = annualSales[annualSales.length - 1]?.sales ?? 0
   const previousYear = annualSales[annualSales.length - 2]?.sales ?? 0
@@ -73,7 +73,7 @@ export default function AnchorReports() {
 
         <Card className="p-4">
           <p className="text-sm font-semibold text-cocoa dark:text-white mb-3">Annual turnover comparison</p>
-          <SalesChart data={annualSales} style="bar" height={180} />
+          <SalesChart data={annualSales} style="bar" height={150} />
           <p className={`text-xs font-semibold mt-2 ${growthPct >= 0 ? 'text-mediterranean' : 'text-coral'}`}>
             {growthPct >= 0 ? '+' : ''}{growthPct}% vs previous year
           </p>

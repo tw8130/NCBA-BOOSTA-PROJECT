@@ -33,6 +33,10 @@ const OUTCOME_COPY: Record<StkOutcome, { title: string; detail: string }> = {
     title: 'Something went wrong',
     detail: 'M-Pesa could not process this request right now.',
   },
+  DUPLICATE: {
+    title: 'Duplicate request',
+    detail: 'A transaction with this reference is already pending or processed.',
+  },
   SUCCESS: {
     title: 'Payment successful',
     detail: 'Your repayment has been received.',

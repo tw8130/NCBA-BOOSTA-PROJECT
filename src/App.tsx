@@ -14,6 +14,11 @@ import Kyc from './pages/onboarding/Kyc'
 import BusinessDocuments from './pages/onboarding/BusinessDocuments'
 import AccountVerification from './pages/onboarding/AccountVerification'
 import SelectAnchor from './pages/onboarding/SelectAnchor'
+import Identity from './pages/onboarding/Identity'
+import NcbaNow from './pages/onboarding/NcbaNow'
+import BusinessProfile from './pages/onboarding/BusinessProfile'
+import Premises from './pages/onboarding/Premises'
+import Mandate from './pages/onboarding/Mandate'
 
 import Dashboard from './pages/Dashboard'
 import Anchors from './pages/Anchors'
@@ -26,6 +31,8 @@ import Support from './pages/Support'
 import ProfileSettings from './pages/settings/ProfileSettings'
 
 import Drawdown from './pages/loan/Drawdown'
+import DrawdownTracker from './pages/customer/DrawdownTracker'
+import SignatoryReview from './pages/signatory/SignatoryReview'
 import Repay from './pages/repay/Repay'
 import RepayStatus from './pages/repay/RepayStatus'
 
@@ -43,12 +50,27 @@ import AnchorReports from './pages/anchor/AnchorReports'
 import AnchorSettings from './pages/anchor/AnchorSettings'
 import StyleGuide from './pages/dev/StyleGuide'
 
+import { LmsProvider } from './context/LmsContext'
+import LmsDashboard from './pages/lms/LmsDashboard'
+import LmsCustomers from './pages/lms/LmsCustomers'
+import LmsPartnerNew from './pages/lms/LmsPartnerNew'
+import LmsLimitNew from './pages/lms/LmsLimitNew'
+import LmsQueue from './pages/lms/LmsQueue'
+import LmsAccounting from './pages/lms/LmsAccounting'
+import LmsExceptions from './pages/lms/LmsExceptions'
+
 // Prototype-only role guard: an Anchor user cannot see the customer app and
 // a Customer cannot see the Anchor portal. A production build would enforce
 // this server-side too — this is the frontend half of that separation.
 function RequireRole({ role, children }: { role: Role; children: ReactNode }) {
   const { role: current } = useAuth()
   if (current !== role) return <Navigate to="/role" replace />
+  return <>{children}</>
+}
+
+function RequireAnyRole({ roles, children }: { roles: Role[]; children: ReactNode }) {
+  const { role: current } = useAuth()
+  if (!current || !roles.includes(current)) return <Navigate to="/role" replace />
   return <>{children}</>
 }
 
@@ -64,9 +86,14 @@ export default function App() {
       <Route path="/customer/signup" element={<SignUp />} />
       <Route path="/customer/otp" element={<Otp />} />
       <Route path="/customer/create-pin" element={<CreatePin />} />
+      <Route path="/customer/identity" element={<Identity />} />
+      <Route path="/customer/ncba-now" element={<NcbaNow />} />
       <Route path="/customer/profile" element={<Profile />} />
       <Route path="/customer/kyc" element={<Kyc />} />
+      <Route path="/customer/business-profile" element={<BusinessProfile />} />
+      <Route path="/customer/premises" element={<Premises />} />
       <Route path="/customer/business-documents" element={<BusinessDocuments />} />
+      <Route path="/customer/mandate" element={<Mandate />} />
       <Route path="/customer/account-verification" element={<AccountVerification />} />
       <Route path="/customer/select-anchors" element={<SelectAnchor />} />
 
@@ -77,6 +104,8 @@ export default function App() {
       <Route path="/customer/loans" element={<RequireRole role="CUSTOMER"><Loans /></RequireRole>} />
       <Route path="/customer/loans/:id" element={<RequireRole role="CUSTOMER"><LoanDetail /></RequireRole>} />
       <Route path="/customer/drawdown" element={<RequireRole role="CUSTOMER"><Drawdown /></RequireRole>} />
+      <Route path="/customer/drawdown/:id" element={<RequireRole role="CUSTOMER"><DrawdownTracker /></RequireRole>} />
+      <Route path="/signatory/review/:token" element={<SignatoryReview />} />
       <Route path="/customer/repay" element={<RequireRole role="CUSTOMER"><Repay /></RequireRole>} />
       <Route path="/customer/repay/status" element={<RequireRole role="CUSTOMER"><RepayStatus /></RequireRole>} />
       <Route path="/customer/transactions" element={<RequireRole role="CUSTOMER"><Transactions /></RequireRole>} />
@@ -105,6 +134,27 @@ export default function App() {
               </Routes>
             </AnchorProvider>
           </RequireRole>
+        }
+      />
+
+      {/* LMS portal — Bank Maker & Checker Operations */}
+      <Route
+        path="/lms/*"
+        element={
+          <RequireAnyRole roles={['BANK_MAKER', 'BANK_CHECKER']}>
+            <LmsProvider>
+              <Routes>
+                <Route path="dashboard" element={<LmsDashboard />} />
+                <Route path="customers" element={<LmsCustomers />} />
+                <Route path="partners/new" element={<LmsPartnerNew />} />
+                <Route path="limits/new" element={<LmsLimitNew />} />
+                <Route path="limits/queue" element={<LmsQueue />} />
+                <Route path="accounting" element={<LmsAccounting />} />
+                <Route path="exceptions" element={<LmsExceptions />} />
+                <Route path="*" element={<Navigate to="/lms/dashboard" replace />} />
+              </Routes>
+            </LmsProvider>
+          </RequireAnyRole>
         }
       />
 

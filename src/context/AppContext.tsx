@@ -12,6 +12,7 @@ interface AppState {
   loading: boolean
   refresh: () => Promise<void>
   markNotificationRead: (id: string) => Promise<void>
+  markAllNotificationsRead: () => Promise<void>
 }
 
 const AppContext = createContext<AppState | undefined>(undefined)
@@ -52,9 +53,25 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)))
   }, [])
 
+  const markAllNotificationsRead = useCallback(async () => {
+    await api.markAllNotificationsRead()
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
+  }, [])
+
   return (
     <AppContext.Provider
-      value={{ customer, anchors, loans, applications, transactions, notifications, loading, refresh, markNotificationRead }}
+      value={{
+        customer,
+        anchors,
+        loans,
+        applications,
+        transactions,
+        notifications,
+        loading,
+        refresh,
+        markNotificationRead,
+        markAllNotificationsRead,
+      }}
     >
       {children}
     </AppContext.Provider>

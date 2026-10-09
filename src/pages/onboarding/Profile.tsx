@@ -1,75 +1,207 @@
+// -----------------------------------------------------------------------------
+// NCBA BOOSTA — Step 5: Personal Details & Prefilled T24 Profile (65/35)
+// -----------------------------------------------------------------------------
+
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { CheckCircle2 } from 'lucide-react'
+import { CheckCircle2, ArrowRight, ShieldCheck, User } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
-import { Stepper } from '../../components/ui/Stepper'
-import { ONBOARDING_STEPS } from '../../lib/onboardingSteps'
-import { mockCustomer } from '../../mocks/data'
-
-function Field({
-  label,
-  prefilled,
-  ...rest
-}: {
-  label: string
-  prefilled?: boolean
-} & React.InputHTMLAttributes<HTMLInputElement>) {
-  return (
-    <div className="mb-3">
-      <div className="flex items-center justify-between mb-1">
-        <label className="text-[12px] font-medium text-text-light-secondary dark:text-text-dark-secondary">
-          {label}
-        </label>
-        {prefilled && (
-          <span className="flex items-center gap-1 text-[10px] font-medium text-mediterranean dark:text-teal-400 bg-mediterranean/10 border border-mediterranean/20 px-1.5 py-0.5 rounded-[20px]">
-            <CheckCircle2 size={10} /> From NCBA T24
-          </span>
-        )}
-      </div>
-      <input
-        {...rest}
-        className={`w-full h-[38px] px-3 rounded-[4px] border text-[13px] text-cocoa dark:text-text-dark-primary focus:outline-none focus:border-sky transition-colors ${
-          prefilled
-            ? 'border-mediterranean/30 bg-mediterranean/5 text-text-light-secondary dark:text-text-dark-secondary cursor-not-allowed'
-            : 'border-surface-border dark:border-surface-dark-border bg-white dark:bg-surface-dark-paper'
-        }`}
-      />
-    </div>
-  )
-}
+import { Input } from '../../components/ui/Input'
+import { Select } from '../../components/ui/Select'
+import { FormLayout } from '../../components/layout/FormLayout'
+import { OnboardingHeader } from '../../components/onboarding/OnboardingHeader'
+import { OnboardingChecklist } from '../../components/onboarding/OnboardingChecklist'
+import { useOnboarding } from '../../context/OnboardingContext'
 
 export default function Profile() {
   const navigate = useNavigate()
-  const p = mockCustomer.prefilledFields
+  const { state, updatePersonalDetails } = useOnboarding()
 
-  return (
-    <div className="min-h-screen bg-surface-light dark:bg-surface-dark-bg text-cocoa dark:text-text-dark-primary px-4 py-8 transition-colors flex flex-col justify-center">
-      <div className="max-w-md mx-auto w-full">
-        <Stepper steps={ONBOARDING_STEPS} current={2} />
-        <div className="mb-5">
-          <p className="text-[11px] font-semibold text-sky uppercase tracking-wide">Personal KYB</p>
-          <h1 className="text-[20px] font-bold text-cocoa dark:text-text-dark-primary tracking-tight mt-0.5">
-            Borrower Profile
-          </h1>
+  const [fullName, setFullName] = useState(state.fullName || 'Bonface Macharia')
+  const [dob, setDob] = useState(state.dob || '1990-05-14')
+  const [kraPin, setKraPin] = useState(state.kraPin || 'A002891928Z')
+  const [email, setEmail] = useState(state.email || 'b.macharia@kiamisuppliers.co.ke')
+  const [educationLevel, setEducationLevel] = useState(
+    state.educationLevel || 'Undergraduate Degree'
+  )
+  const [emergencyContact, setEmergencyContact] = useState(
+    state.emergencyContact || '0722 998 877 (Grace Macharia - Spouse)'
+  )
+
+  const isT24Customer = !state.isNewToBank && state.t24Status === 'EXISTING_CUSTOMER'
+  const isNcbaNow = state.ncbaNowCompleted
+
+  function handleSaveAndContinue() {
+    updatePersonalDetails({
+      fullName,
+      dob,
+      kraPin,
+      email,
+      educationLevel,
+      emergencyContact,
+    })
+    navigate('/customer/kyc')
+  }
+
+  const leftContent = (
+    <div className="space-y-4">
+      <Card className="p-5 sm:p-6 space-y-4">
+        <div>
+          <h2 className="text-[16px] font-bold text-cocoa dark:text-text-dark-primary tracking-tight">
+            Personal & Identification Details
+          </h2>
           <p className="text-[12px] text-text-light-secondary dark:text-text-dark-secondary mt-0.5">
-            We've pre-filled details verified from your NCBA core profile. Please complete the rest.
+            {isT24Customer
+              ? 'Core identifiers verified from your NCBA Core Banking (T24) account are locked for security.'
+              : isNcbaNow
+              ? 'Identifiers populated from your newly opened NCBA NOW account.'
+              : 'Please verify and complete your personal profile details.'}
           </p>
         </div>
 
-        <Card className="p-5">
-          <Field label="Full names" defaultValue="Bonface Macharia" prefilled={p.includes('fullName')} disabled={p.includes('fullName')} />
-          <Field label="National ID" defaultValue="24567891" prefilled={p.includes('nationalId')} disabled={p.includes('nationalId')} />
-          <Field label="Date of birth" type="date" defaultValue="1990-05-14" prefilled={p.includes('dateOfBirth')} disabled={p.includes('dateOfBirth')} />
-          <Field label="Mobile number" defaultValue="0712 345 678" prefilled={p.includes('phone')} disabled={p.includes('phone')} />
-          <Field label="Email address" type="email" placeholder="you@example.com" />
-          <Field label="Physical business premises" placeholder="Street, building, trading center" />
-          <Field label="County" placeholder="e.g. Nairobi" />
+        {/* Informational Status Banner */}
+        <div className="p-3 rounded-[4px] bg-mediterranean/10 border border-mediterranean/30 flex items-center justify-between text-[11px]">
+          <span className="flex items-center gap-1.5 font-semibold text-cocoa dark:text-text-dark-primary">
+            <CheckCircle2 size={15} className="text-mediterranean shrink-0" />
+            {isT24Customer
+              ? 'Core Banking Records Matched (CIF: CIF-0089211)'
+              : isNcbaNow
+              ? 'NCBA NOW Profile Created & Linked'
+              : 'Verified Phone & ID Session'}
+          </span>
+          <span className="text-[10px] font-bold px-2 py-0.5 rounded-[20px] bg-mediterranean-tint text-cocoa border border-mediterranean/40">
+            {isT24Customer ? 'From NCBA T24' : 'From NCBA NOW'}
+          </span>
+        </div>
 
-          <Button full className="mt-4" onClick={() => navigate('/customer/kyc')}>
-            Save and continue
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Full Name */}
+          <div className="sm:col-span-2">
+            <Input
+              label="Full Legal Names (as per National ID)"
+              value={fullName}
+              disabled={isT24Customer}
+              onChange={(e) => setFullName(e.target.value)}
+              badgeText={isT24Customer ? 'From NCBA T24' : undefined}
+              helperText={isT24Customer ? 'Verified from NCBA KYC records' : undefined}
+            />
+          </div>
+
+          {/* National ID */}
+          <div>
+            <Input
+              label="National ID Number"
+              value={state.nationalId}
+              disabled
+              badgeText="Verified ID"
+              helperText="Validated in step 4"
+            />
+          </div>
+
+          {/* Date of Birth */}
+          <div>
+            <Input
+              label="Date of Birth"
+              type="date"
+              value={dob}
+              disabled={isT24Customer}
+              onChange={(e) => setDob(e.target.value)}
+              badgeText={isT24Customer ? 'From NCBA T24' : undefined}
+            />
+          </div>
+
+          {/* KRA PIN */}
+          <div>
+            <Input
+              label="Personal KRA PIN"
+              value={kraPin}
+              disabled={isT24Customer}
+              onChange={(e) => setKraPin(e.target.value.toUpperCase())}
+              badgeText={isT24Customer ? 'From NCBA T24' : undefined}
+            />
+          </div>
+
+          {/* Registered Mobile */}
+          <div>
+            <Input
+              label="Primary Mobile Number"
+              value={state.phone}
+              disabled
+              badgeText="OTP Verified"
+            />
+          </div>
+
+          {/* Email Address */}
+          <div className="sm:col-span-2">
+            <Input
+              label="Business / Personal Email Address"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="applicant@domain.co.ke"
+              helperText="Facility approval notices and statements will be sent here."
+            />
+          </div>
+
+          {/* Education Level */}
+          <div>
+            <Select
+              label="Highest Education Level"
+              value={educationLevel}
+              onChange={(e) => setEducationLevel(e.target.value)}
+              options={[
+                { value: 'Secondary School (KCSE)', label: 'Secondary School (KCSE)' },
+                { value: 'Certificate / Diploma', label: 'Certificate / Diploma' },
+                { value: 'Undergraduate Degree', label: 'Undergraduate Degree' },
+                { value: 'Postgraduate / Masters', label: 'Postgraduate / Masters' },
+                { value: 'Professional Qualification', label: 'Professional Qualification' },
+              ]}
+            />
+          </div>
+
+          {/* Emergency Contact */}
+          <div>
+            <Input
+              label="Emergency Contact (Name & Phone)"
+              value={emergencyContact}
+              onChange={(e) => setEmergencyContact(e.target.value)}
+              placeholder="Name & 07XX XXX XXX"
+            />
+          </div>
+        </div>
+
+        <div className="pt-2">
+          <Button
+            full
+            size="md"
+            onClick={handleSaveAndContinue}
+            rightIcon={<ArrowRight size={15} />}
+          >
+            Save & Continue to KYC Uploads
           </Button>
-        </Card>
-      </div>
+        </div>
+      </Card>
+    </div>
+  )
+
+  return (
+    <div className="min-h-screen bg-surface-light dark:bg-surface-dark-bg text-cocoa dark:text-text-dark-primary">
+      <OnboardingHeader
+        currentStep={5}
+        totalSteps={12}
+        stepTitle="Personal Profile"
+        backPath="/customer/identity"
+      />
+      <main className="px-4 sm:px-6 py-6">
+        <FormLayout
+          title="Step 5: Personal Profile"
+          subtitle="Confirm your verified identity details and primary contact"
+          left={leftContent}
+          right={<OnboardingChecklist currentStepId="personal" />}
+          summaryTitle="Onboarding Status"
+        />
+      </main>
     </div>
   )
 }

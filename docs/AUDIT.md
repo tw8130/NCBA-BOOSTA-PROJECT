@@ -336,57 +336,57 @@ npm run build
 ---
 
 ### Phase 4 — Repayment, Transactions, Notifications
-- [ ] **Task 4.1: Loan Portfolio & Dual-Method Repayment**
+- [x] **Task 4.1: Loan Portfolio & Dual-Method Repayment**
   - Update `Loans.tsx` with filterable tabs: `All`, `Active`, `Overdue`, `Paid Off`.
   - Refactor `Repay.tsx`: Full vs Partial repayment with live remaining balance calculation.
   - NCBA Account debit option (instant simulation).
-- [ ] **Task 4.2: M-Pesa STK Push Component**
+- [x] **Task 4.2: M-Pesa STK Push Component**
   - Create `src/components/domain/MpesaStkModal.tsx`.
   - Model all A4.10 states: `IDLE`, `SENDING`, `WAITING_CONFIRMATION`, `SUCCESS`, `WRONG_PIN`, `CANCELLED`, `TIMEOUT`, `INSUFFICIENT_FUNDS`, `SYSTEM_FAILURE`.
   - Max 3 attempts with attempts-remaining counter; retry stays on screen without resetting flow.
-- [ ] **Task 4.3: Financial Ledger & Notifications Synchronization**
+- [x] **Task 4.3: Financial Ledger & Notifications Synchronization**
   - Generate FTX payment reference and printable receipt screen.
   - Ensure repayments immediately update loan balance, anchor available limit, and transactions list.
   - Refactor `Transactions.tsx` with category filters (`All`, `Loans`, `Disbursements`, `Repayments`, `Fees`).
   - Implement per-loan 3-day due date reminders (in-app + simulated SMS).
-- [ ] **Phase 4 Checkpoint:** Run `npm run build`; verify wrong PIN twice then success updates loan balance, available limit, transactions, and notifications.
+- [x] **Phase 4 Checkpoint:** Run `npm run build`; verify wrong PIN twice then success updates loan balance, available limit, transactions, and notifications.
 
 ---
 
 ### Phase 5 — Anchor Portal Polish
-- [ ] **Task 5.1: Anchor Portal Design System Alignment**
+- [x] **Task 5.1: Anchor Portal Design System Alignment**
   - Apply brand tokens, Century Gothic typography, and 195px sidebar to `AnchorShell.tsx` and all anchor views.
   - Restyle charts to 140–160px height in Sky, Mediterranean, Cocoa, and Passion.
-- [ ] **Task 5.2: Retailer Portfolio Table & Aging**
+- [x] **Task 5.2: Retailer Portfolio Table & Aging**
   - Add search, filtering, and pagination to `AnchorCustomers.tsx`.
   - Columns: Customer Name, National ID, Facility Limit, Utilisation %, Overdue Ageing, Status.
   - Data minimisation enforcement (anchor sees only authorised fields for its own network).
-- [ ] **Task 5.3: Annual Turnover Review State Machine**
+- [x] **Task 5.3: Annual Turnover Review State Machine**
   - Implement turnover review states: `DUE_SOON → DOCUMENTS_UPLOADED → SUBMITTED → UNDER_NCBA_REVIEW → APPROVED | MORE_INFO_REQUIRED | DECLINED`.
   - Add 30/14/7-day reminder banners, email preview drawer, and document upload history.
-- [ ] **Phase 5 Checkpoint:** Run `npm run build`; verify anchor customer search, turnover review state transitions, and responsive chart layouts.
+- [x] **Phase 5 Checkpoint:** Run `npm run build`; verify anchor customer search, turnover review state transitions, and responsive chart layouts.
 
 ---
 
 ### Phase 6 — Bank LMS (Maker-Checker Operations)
-- [ ] **Task 6.1: LMS Architecture & Role Separation**
+- [x] **Task 6.1: LMS Architecture & Role Separation**
   - Add `LmsShell.tsx` and `src/context/LmsContext.tsx`.
   - Create `src/services/lmsApi.ts`.
   - Extend `AuthContext.tsx` to support `BANK_MAKER` and `BANK_CHECKER` with demo switcher.
-- [ ] **Task 6.2: LMS Dashboard & Portfolio Health**
+- [x] **Task 6.2: LMS Dashboard & Portfolio Health**
   - Build `/lms/dashboard`: Gross portfolio, collections YTD, and PAR breakdown by CBK grade (`Normal` 0–30, `Watch` 30–90, `Sub-standard` 90–180, `Doubtful` 180–360, `Loss` 360+ DPD).
   - Create `src/components/lms/ParBadge.tsx` and default penalty calculation (30% p.a.).
-- [ ] **Task 6.3: Partner Setup & Limit Amendment (Maker)**
+- [x] **Task 6.3: Partner Setup & Limit Amendment (Maker)**
   - Build `/lms/partners/new` (65/35 form: anchor core account validation, contact, facility limit, max tenor, base rate + margin).
   - Build `/lms/limits/new` (Maker: search customer, enter proposed limit, upload justification memo).
-- [ ] **Task 6.4: Checker Queue & Audit Trail (Checker)**
+- [x] **Task 6.4: Checker Queue & Audit Trail (Checker)**
   - Build `/lms/limits/queue` and `src/components/lms/QueueTable.tsx`.
   - Create `src/components/lms/AuditTrail.tsx` (immutable timeline of Maker submission and Checker decisions).
   - **Enforce Maker≠Checker separation:** Checkers cannot approve requests they created.
-- [ ] **Task 6.5: Accounting Mirror & Reconciliations**
+- [x] **Task 6.5: Accounting Mirror & Reconciliations**
   - Build `/lms/accounting`: T24 GL entries mirror for principal, interest, penalty, facility fees, and BOOSTA control account (**strictly zero vendor names**).
   - Build `/lms/exceptions`: T24 FT references matching against gateway mobile transaction logs.
-- [ ] **Phase 6 Checkpoint:** Run `npm run build`; verify Maker request appears in Checker queue, Maker cannot approve own request, and approval updates audit trail and customer limit.
+- [x] **Phase 6 Checkpoint:** Run `npm run build`; verify Maker request appears in Checker queue, Maker cannot approve own request, and approval updates audit trail and customer limit.
 
 ---
 

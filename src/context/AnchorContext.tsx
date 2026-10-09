@@ -7,6 +7,7 @@ import type {
   AnchorUser,
   SalesPoint,
   TurnoverReview,
+  TurnoverReviewStatus,
 } from '../types'
 
 interface AnchorState {
@@ -21,6 +22,11 @@ interface AnchorState {
   loading: boolean
   refresh: () => Promise<void>
   setNotificationState: (id: string, state: 'unread' | 'read' | 'archived') => Promise<void>
+  markAllNotificationsRead: () => Promise<void>
+  setTurnoverReviewStatus: (
+    status: TurnoverReviewStatus,
+    extra?: { reviewerComments?: string; newProposedLimit?: number; documents?: string[] }
+  ) => Promise<void>
 }
 
 const AnchorContext = createContext<AnchorState | undefined>(undefined)
@@ -67,9 +73,42 @@ export function AnchorProvider({ children }: { children: ReactNode }) {
     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, state } : n)))
   }, [])
 
+  const markAllNotificationsRead = useCallback(async () => {
+    await anchorApi.markAllNotificationsRead()
+    setNotifications((prev) => prev.map((n) => (n.state === 'unread' ? { ...n, state: 'read' } : n)))
+  }, [])
+
+  const setTurnoverReviewStatus = useCallback(
+    async (
+      status: TurnoverReviewStatus,
+      extra?: { reviewerComments?: string; newProposedLimit?: number; documents?: string[] }
+    ) => {
+      const updated = await anchorApi.setTurnoverReviewStatus(status, extra)
+      setTurnoverReview(updated)
+      // refresh notifications since status transitions trigger notices
+      const notifs = await anchorApi.getNotifications()
+      setNotifications(notifs)
+    },
+    []
+  )
+
   return (
     <AnchorContext.Provider
-      value={{ user, customers, monthlySales, weeklySales, annualSales, turnoverReview, notifications, transactions, loading, refresh, setNotificationState }}
+      value={{
+        user,
+        customers,
+        monthlySales,
+        weeklySales,
+        annualSales,
+        turnoverReview,
+        notifications,
+        transactions,
+        loading,
+        refresh,
+        setNotificationState,
+        markAllNotificationsRead,
+        setTurnoverReviewStatus,
+      }}
     >
       {children}
     </AnchorContext.Provider>

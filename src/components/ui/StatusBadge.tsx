@@ -11,29 +11,29 @@ interface Props {
 }
 
 const toneStyles: Record<BadgeTone, { badge: string; dot: string; text: string }> = {
-  // Mediterranean
+  // Mediterranean tint with Cocoa text (A5 rule: Mediterranean on white is low contrast, Cocoa on Mediterranean tint is 5.4:1)
   success: {
-    badge: 'bg-[#00A8A9]/15 border-[#00A8A9]/30 text-[#00A8A9] dark:text-[#2DD4BF]',
-    dot: 'bg-[#00A8A9]',
-    text: 'text-[#00A8A9] dark:text-[#2DD4BF]',
+    badge: 'bg-mediterranean-tint border-mediterranean/30 text-cocoa dark:bg-mediterranean/20 dark:border-mediterranean/40 dark:text-text-dark-primary',
+    dot: 'bg-mediterranean',
+    text: 'text-cocoa dark:text-text-dark-primary',
   },
   // Sun with Cocoa text (A5 rule: Sun text on white forbidden)
   warning: {
-    badge: 'bg-[#F8E200]/25 border-[#F8E200]/50 text-[#39302D] dark:text-[#F8E200] dark:bg-[#F8E200]/15 dark:border-[#F8E200]/30',
-    dot: 'bg-[#E0CB00]',
-    text: 'text-[#39302D] dark:text-[#F8E200]',
+    badge: 'bg-sun/25 border-sun/50 text-cocoa dark:text-sun dark:bg-sun/15 dark:border-sun/30',
+    dot: 'bg-sun-dark',
+    text: 'text-cocoa dark:text-sun',
   },
   // Coral
   danger: {
-    badge: 'bg-[#E4032C]/15 border-[#E4032C]/30 text-[#E4032C] dark:text-[#F87171]',
-    dot: 'bg-[#E4032C]',
-    text: 'text-[#E4032C] dark:text-[#F87171]',
+    badge: 'bg-coral-tint border-coral/30 text-coral dark:text-coral dark:bg-coral/15',
+    dot: 'bg-coral',
+    text: 'text-coral dark:text-coral',
   },
   // Sky with Cocoa text
   info: {
-    badge: 'bg-[#3AB3E5]/15 border-[#3AB3E5]/30 text-[#39302D] dark:text-[#3AB3E5]',
-    dot: 'bg-[#3AB3E5]',
-    text: 'text-[#39302D] dark:text-[#3AB3E5]',
+    badge: 'bg-sky-tint border-sky/30 text-cocoa dark:text-sky dark:bg-sky/20',
+    dot: 'bg-sky',
+    text: 'text-cocoa dark:text-sky',
   },
   // Neutral
   neutral: {
@@ -43,9 +43,9 @@ const toneStyles: Record<BadgeTone, { badge: string; dot: string; text: string }
   },
   // Passion
   accent: {
-    badge: 'bg-[#9F197E]/15 border-[#9F197E]/30 text-[#9F197E] dark:text-[#E879F9]',
-    dot: 'bg-[#9F197E]',
-    text: 'text-[#9F197E] dark:text-[#E879F9]',
+    badge: 'bg-passion-tint border-passion/30 text-passion dark:text-passion-tint dark:bg-passion/20',
+    dot: 'bg-passion',
+    text: 'text-passion dark:text-passion-tint',
   },
 }
 

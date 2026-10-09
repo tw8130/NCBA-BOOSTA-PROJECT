@@ -53,6 +53,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           id={inputId}
           ref={ref}
           disabled={disabled}
+          aria-invalid={!!error}
+          aria-describedby={error ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined}
           className={`w-full h-[38px] min-h-[44px] sm:min-h-[38px] rounded-[4px] border bg-white dark:bg-surface-dark-paper px-3 text-[13px] text-cocoa dark:text-text-dark-primary placeholder:text-text-light-muted dark:placeholder:text-text-dark-muted transition-colors duration-150 focus:outline-none ${
             prefixAddon ? 'pl-9' : ''
           } ${suffixAddon ? 'pr-9' : ''} ${

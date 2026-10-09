@@ -24,11 +24,18 @@ import { Toast } from '../../components/ui/Toast'
 import { Modal } from '../../components/ui/Modal'
 import { useTheme } from '../../context/ThemeContext'
 import { Navbar } from '../../components/layout/Navbar'
+import { OTPInput } from '../../components/domain/OTPInput'
+import { PinField } from '../../components/domain/PinField'
+import { DocumentUploader } from '../../components/domain/DocumentUploader'
+import { SignaturePad } from '../../components/domain/SignaturePad'
 
 export default function StyleGuide() {
   const { isDark, toggleTheme } = useTheme()
   const [modalOpen, setModalOpen] = useState(false)
   const [stepperStep, setStepperStep] = useState(1)
+  const [demoOtp, setDemoOtp] = useState('123456')
+  const [demoPin, setDemoPin] = useState('2580')
+  const [demoSignature, setDemoSignature] = useState<string | null>(null)
 
   return (
     <div className="min-h-screen bg-surface-light dark:bg-surface-dark-bg text-cocoa dark:text-text-dark-primary transition-colors duration-150">
@@ -397,6 +404,127 @@ export default function StyleGuide() {
               </div>
             </Modal>
           )}
+        </section>
+
+        {/* 7. Phase 2: Onboarding & KYB Components */}
+        <section className="space-y-4 pt-6 border-t border-surface-border dark:border-surface-dark-border">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-[15px] font-semibold tracking-tight text-cocoa dark:text-text-dark-primary">
+                7. Phase 2: Onboarding & Verification Components
+              </h2>
+              <p className="text-[12px] text-text-light-secondary dark:text-text-dark-secondary mt-0.5">
+                OTPInput (split 6-digit), PinField (masked + reveal), DocumentUploader (all 5 states), and HTML5 Canvas SignaturePad.
+              </p>
+            </div>
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-[20px] bg-mediterranean-tint text-cocoa border border-mediterranean/30">
+              Phase 2 Verified
+            </span>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            {/* Split OTP Input */}
+            <Card className="p-4 space-y-3">
+              <h3 className="text-[13px] font-semibold text-cocoa dark:text-text-dark-primary">
+                Split 6-Digit OTPInput
+              </h3>
+              <OTPInput value={demoOtp} onChange={setDemoOtp} />
+              <p className="text-[11px] text-center text-text-light-muted">
+                Current value: <strong className="font-mono text-cocoa dark:text-sky">{demoOtp}</strong>
+              </p>
+            </Card>
+
+            {/* PinField */}
+            <Card className="p-4 space-y-3">
+              <h3 className="text-[13px] font-semibold text-cocoa dark:text-text-dark-primary">
+                4-Digit Security PinField with Reveal Toggle
+              </h3>
+              <PinField
+                label="Enter 4-Digit PIN"
+                value={demoPin}
+                onChange={setDemoPin}
+                helperText="Supports reveal toggle and numeric inputMode."
+              />
+            </Card>
+
+            {/* Document Uploader All States */}
+            <Card className="p-4 space-y-3">
+              <h3 className="text-[13px] font-semibold text-cocoa dark:text-text-dark-primary">
+                DocumentUploader (Interactive States)
+              </h3>
+              <DocumentUploader
+                label="National ID Card — Front"
+                description="Click to upload or use demo pass/fail buttons."
+                tag="KYC Front"
+              />
+              <DocumentUploader
+                label="Single Business Permit (Simulated Failure Demo)"
+                tag="County License"
+                simulateFailure
+              />
+            </Card>
+
+            {/* HTML5 Canvas SignaturePad */}
+            <Card className="p-4 space-y-3">
+              <h3 className="text-[13px] font-semibold text-cocoa dark:text-text-dark-primary">
+                HTML5 Canvas SignaturePad
+              </h3>
+              <SignaturePad
+                label="Authorized Digital Signature"
+                savedSignature={demoSignature}
+                onSave={setDemoSignature}
+                onClear={() => setDemoSignature(null)}
+              />
+            </Card>
+          </div>
+
+          {/* Quick Onboarding Journey Links */}
+          <Card className="p-4 bg-cocoa text-white space-y-2">
+            <h3 className="text-[13px] font-bold text-sky">
+              Phase 2 Onboarding Journey Routes:
+            </h3>
+            <div className="flex flex-wrap gap-2 text-[11px]">
+              <a href="/customer/signup" className="px-2.5 py-1 rounded-[4px] bg-white/10 hover:bg-sky hover:text-cocoa transition-colors">
+                1. Mobile (/customer/signup)
+              </a>
+              <a href="/customer/otp" className="px-2.5 py-1 rounded-[4px] bg-white/10 hover:bg-sky hover:text-cocoa transition-colors">
+                2. OTP (/customer/otp)
+              </a>
+              <a href="/customer/create-pin" className="px-2.5 py-1 rounded-[4px] bg-white/10 hover:bg-sky hover:text-cocoa transition-colors">
+                3. PIN (/customer/create-pin)
+              </a>
+              <a href="/customer/identity" className="px-2.5 py-1 rounded-[4px] bg-white/10 hover:bg-sky hover:text-cocoa transition-colors">
+                4. Identity (/customer/identity)
+              </a>
+              <a href="/customer/ncba-now" className="px-2.5 py-1 rounded-[4px] bg-white/10 hover:bg-sky hover:text-cocoa transition-colors">
+                5. NCBA NOW (/customer/ncba-now)
+              </a>
+              <a href="/customer/profile" className="px-2.5 py-1 rounded-[4px] bg-white/10 hover:bg-sky hover:text-cocoa transition-colors">
+                6. Profile (/customer/profile)
+              </a>
+              <a href="/customer/kyc" className="px-2.5 py-1 rounded-[4px] bg-white/10 hover:bg-sky hover:text-cocoa transition-colors">
+                7. KYC (/customer/kyc)
+              </a>
+              <a href="/customer/business-profile" className="px-2.5 py-1 rounded-[4px] bg-white/10 hover:bg-sky hover:text-cocoa transition-colors">
+                8. Business Profile (/customer/business-profile)
+              </a>
+              <a href="/customer/premises" className="px-2.5 py-1 rounded-[4px] bg-white/10 hover:bg-sky hover:text-cocoa transition-colors">
+                9. Premises (/customer/premises)
+              </a>
+              <a href="/customer/business-documents" className="px-2.5 py-1 rounded-[4px] bg-white/10 hover:bg-sky hover:text-cocoa transition-colors">
+                10. Documents (/customer/business-documents)
+              </a>
+              <a href="/customer/mandate" className="px-2.5 py-1 rounded-[4px] bg-white/10 hover:bg-sky hover:text-cocoa transition-colors">
+                11. Mandate (/customer/mandate)
+              </a>
+              <a href="/customer/account-verification" className="px-2.5 py-1 rounded-[4px] bg-white/10 hover:bg-sky hover:text-cocoa transition-colors">
+                12. Account (/customer/account-verification)
+              </a>
+              <a href="/customer/select-anchors" className="px-2.5 py-1 rounded-[4px] bg-white/10 hover:bg-sky hover:text-cocoa transition-colors">
+                13. Anchors (/customer/select-anchors)
+              </a>
+            </div>
+          </Card>
         </section>
       </main>
     </div>

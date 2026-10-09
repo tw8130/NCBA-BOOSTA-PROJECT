@@ -5,6 +5,7 @@ import App from './App'
 import { AppProvider } from './context/AppContext'
 import { AuthProvider } from './context/AuthContext'
 import { ThemeProvider } from './context/ThemeContext'
+import { OnboardingProvider } from './context/OnboardingContext'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -13,7 +14,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <ThemeProvider>
         <AuthProvider>
           <AppProvider>
-            <App />
+            <OnboardingProvider>
+              <App />
+            </OnboardingProvider>
           </AppProvider>
         </AuthProvider>
       </ThemeProvider>

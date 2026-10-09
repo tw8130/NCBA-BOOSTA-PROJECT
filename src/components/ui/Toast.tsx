@@ -21,7 +21,7 @@ const toastConfigs = {
     icon: AlertTriangle,
     border: 'border-sun/40',
     bg: 'bg-sun/15',
-    iconColor: 'text-[#8A7800] dark:text-sun',
+    iconColor: 'text-cocoa dark:text-sun',
   },
   danger: {
     icon: AlertCircle,

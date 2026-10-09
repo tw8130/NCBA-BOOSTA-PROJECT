@@ -11,6 +11,7 @@ const stageMeta: Record<StkStage, { icon: typeof CheckCircle2; color: string; an
   TIMEOUT: { icon: WifiOff, color: 'text-cocoa dark:text-sun' },
   INSUFFICIENT_FUNDS: { icon: AlertTriangle, color: 'text-cocoa dark:text-sun' },
   SYSTEM_FAILURE: { icon: AlertTriangle, color: 'text-coral' },
+  DUPLICATE: { icon: AlertTriangle, color: 'text-cocoa dark:text-sun' },
   SUCCESS: { icon: CheckCircle2, color: 'text-mediterranean' },
 }
 

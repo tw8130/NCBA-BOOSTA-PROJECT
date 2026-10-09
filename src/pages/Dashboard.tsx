@@ -1,16 +1,18 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Wallet, Banknote, Receipt, LifeBuoy, ChevronRight, Landmark, ShieldCheck, TrendingUp } from 'lucide-react'
+import { Wallet, Banknote, Receipt, LifeBuoy, ChevronRight, Landmark, ShieldCheck, TrendingUp, Sparkles } from 'lucide-react'
 import { AppShell } from '../components/layout/AppShell'
 import { Card } from '../components/ui/Card'
 import { LimitCard } from '../components/domain/LimitCard'
 import { AnchorCard } from '../components/domain/AnchorCard'
 import { LoanCard } from '../components/domain/LoanCard'
 import { CRBRestrictionModal } from '../components/domain/CRBRestrictionModal'
+import { ReassessmentModal } from '../components/domain/ReassessmentModal'
 import { LoadingState } from '../components/ui/LoadingState'
 import { EmptyState } from '../components/ui/EmptyState'
 import { StatusBadge } from '../components/ui/StatusBadge'
 import { useApp } from '../context/AppContext'
+import { useOnboarding } from '../context/OnboardingContext'
 
 const actions = [
   { to: '/customer/drawdown', label: 'Draw down facility', icon: Wallet },
@@ -21,8 +23,10 @@ const actions = [
 
 export default function Dashboard() {
   const navigate = useNavigate()
-  const { customer, anchors, loans, loading } = useApp()
+  const { customer, anchors, loans, loading, refresh } = useApp()
+  const { state: onboardingState } = useOnboarding()
   const [crbModalAnchorId, setCrbModalAnchorId] = useState<string | null>(null)
+  const [showReassessmentModal, setShowReassessmentModal] = useState(false)
 
   if (loading || !customer) {
     return (
@@ -44,10 +48,15 @@ export default function Dashboard() {
         <div>
           <p className="text-[12px] text-text-light-muted dark:text-text-dark-muted font-medium">Welcome back,</p>
           <h1 className="text-[20px] font-bold text-cocoa dark:text-text-dark-primary tracking-tight">
-            {customer.fullName}
+            {onboardingState.fullName || customer.fullName}
           </h1>
           <p className="text-[11px] text-text-light-secondary dark:text-text-dark-secondary">
-            {customer.businessName} · Sole Proprietorship
+            {onboardingState.businessName || customer.businessName} ·{' '}
+            {onboardingState.businessType === 'PARTNERSHIP'
+              ? 'Partnership'
+              : onboardingState.businessType === 'LIMITED_COMPANY'
+              ? 'Limited Company (CR12)'
+              : 'Sole Proprietorship'}
           </p>
         </div>
         <StatusBadge label="KYB Verified" tone="success" icon={<ShieldCheck size={11} />} />
@@ -160,13 +169,13 @@ export default function Dashboard() {
               </div>
             </div>
             <p className="text-[11px] text-text-light-secondary dark:text-text-dark-secondary mt-1 mb-3">
-              Your scorecard qualifies you for preferential facility fees across approved anchors.
+              Your scorecard qualifies you for preferential facility fees across approved anchors. Upload your M-Pesa turnover statement to request a limit increase.
             </p>
             <button
-              onClick={() => navigate('/customer/support')}
-              className="w-full py-1.5 rounded-[4px] bg-white dark:bg-surface-dark-paper border border-surface-border dark:border-surface-dark-border text-cocoa dark:text-white text-[11px] font-semibold flex items-center justify-center gap-1 hover:border-sky/40"
+              onClick={() => setShowReassessmentModal(true)}
+              className="w-full py-2 rounded-[4px] bg-cocoa text-white dark:bg-sky dark:text-cocoa text-[11px] font-bold flex items-center justify-center gap-1.5 hover:opacity-90 transition-opacity"
             >
-              <TrendingUp size={13} /> Request Reassessment
+              <TrendingUp size={13} /> Improve My Score
             </button>
           </Card>
 
@@ -201,6 +210,15 @@ export default function Dashboard() {
           anchorName={modalAnchor.name}
           limit={modalAnchor.approvedLimit}
           onClose={() => setCrbModalAnchorId(null)}
+        />
+      )}
+
+      {showReassessmentModal && (
+        <ReassessmentModal
+          onClose={() => setShowReassessmentModal(false)}
+          onSuccess={() => {
+            refresh()
+          }}
         />
       )}
     </AppShell>
